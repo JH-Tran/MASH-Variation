@@ -7,7 +7,7 @@ public class HelicopterController : MonoBehaviour
 {
     private float horizontal;
     private float vertical;
-    private float speed = 1.0f;
+    private float speed = 2.2f;
     private int soldiersCarrying = 0;
     private int maxSoldiers = 3;
 
@@ -42,6 +42,10 @@ public class HelicopterController : MonoBehaviour
             rb2d.velocity = Vector3.zero;
             Debug.Log("Lose");
         }
+        else if (collision.gameObject.CompareTag("Hospital"))
+        {
+            collision.gameObject.GetComponent<Hospital>().RescuedSoldiers(DropSoldiers());
+        }
     }
     private void HelicopterSetUp()
     {
@@ -59,5 +63,11 @@ public class HelicopterController : MonoBehaviour
     public void IncrementSoldierCarryCount()
     {
         soldiersCarrying += 1;
+    }
+    private int DropSoldiers()
+    {
+        int currentSoldiers = soldiersCarrying;
+        soldiersCarrying = 0;
+        return currentSoldiers;
     }
 }
