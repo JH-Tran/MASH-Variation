@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,8 @@ public class HelicopterController : MonoBehaviour
     private Rigidbody2D rb2d;
     private BoxCollider2D boxCollider2D;
 
+    private bool isPlayerAlive = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,7 +29,19 @@ public class HelicopterController : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        PlayerMovement();
+        if (isPlayerAlive)
+        {
+            PlayerMovement();
+        }
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Tree"))
+        {
+            isPlayerAlive = false;
+            rb2d.velocity = Vector3.zero;
+            Debug.Log("Lose");
+        }
     }
     private void HelicopterSetUp()
     {

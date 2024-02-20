@@ -11,7 +11,7 @@ public class InjuredSoldier : MonoBehaviour
         {
             try
             {
-                if (collision.gameObject.GetComponent<HelicopterController>().IsHelicopterFull())
+                if (!collision.gameObject.GetComponent<HelicopterController>().IsHelicopterFull())
                 {
                     collision.gameObject.GetComponent<HelicopterController>().IncrementSoldierCarryCount();
                     Destroy(gameObject);
