@@ -14,6 +14,7 @@ public class HelicopterController : MonoBehaviour
 
     private Rigidbody2D rb2d;
     private Animator animator;
+    private AudioSource audioSource;
     [SerializeField] Transform spawnPoint;
 
     public int SolderiersCarrying
@@ -60,12 +61,14 @@ public class HelicopterController : MonoBehaviour
     {
         rb2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
     public void ResetHelicopter()
     {
         rb2d.velocity = Vector3.zero;
         gameObject.transform.position = spawnPoint.position;
         isPlayerAlive = true;
+        soldiersCarrying = 0;
     }
     private void PlayerMovement()
     {
@@ -86,6 +89,7 @@ public class HelicopterController : MonoBehaviour
     public void IncrementSoldierCarryCount()
     {
         soldiersCarrying += 1;
+        audioSource.Play();
         if (IsHelicopterFull())
         {
             animator.SetBool("isFull", true);

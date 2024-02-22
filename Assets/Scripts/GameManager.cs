@@ -19,6 +19,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] HelicopterController controller;
     [SerializeField] TextMeshProUGUI totalRescuedText;
     [SerializeField] TextMeshProUGUI soldiersHelicopterText;
+    [SerializeField] GameObject gameStateScreen;
+    [SerializeField] TextMeshProUGUI winLoseText;
+    [SerializeField] AudioClip winSound;
+    [SerializeField] AudioClip loseSound;
+    [SerializeField] AudioSource audioSource;
 
     [SerializeField] GameObject soldiersPrefab;
     [SerializeField] Transform injuredSoldiers;
@@ -32,6 +37,10 @@ public class GameManager : MonoBehaviour
             totalSoldiersRescued += value;
         }
     }
+    private void Awake()
+    {
+        gameStateScreen.SetActive(false);
+    }
     private void Start()
     {
         foreach (Transform t in injuredSoldiers)
@@ -40,6 +49,7 @@ public class GameManager : MonoBehaviour
         }
         maxSoldiers = soldiersTransform.Count;
         SpawnSoldiers();
+        audioSource = GetComponent<AudioSource>();
     }
     private void Update()
     {
@@ -65,6 +75,7 @@ public class GameManager : MonoBehaviour
         SpawnSoldiers();
         totalSoldiersRescued = 0;
         GameObject.FindWithTag("Player").GetComponent<HelicopterController>().ResetHelicopter();
+        gameStateScreen.SetActive(false);
         gameEnd = false;
     }
     private void SpawnSoldiers()
@@ -84,10 +95,16 @@ public class GameManager : MonoBehaviour
     }
     private void WinState()
     {
-        Debug.Log("Win");
+        gameStateScreen.SetActive(true);
+        winLoseText.text = "You Rescued Everyone!";
+        audioSource.clip = winSound;
+        audioSource.Play();
     }
     public void LoseState()
     {
-        Debug.Log("Lose");
+        gameStateScreen.SetActive(true);
+        winLoseText.text = "Game over!";
+        audioSource.clip = loseSound;
+        audioSource.Play();
     }
 }
