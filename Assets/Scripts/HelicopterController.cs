@@ -10,11 +10,10 @@ public class HelicopterController : MonoBehaviour
     private float speed = 2.2f;
     private int soldiersCarrying = 0;
     private int maxSoldiers = 3;
+    private bool isPlayerAlive = true;
 
     private Rigidbody2D rb2d;
-    private BoxCollider2D boxCollider2D;
-
-    private bool isPlayerAlive = true;
+    private Animator animator;
 
     // Start is called before the first frame update
     void Start()
@@ -50,11 +49,19 @@ public class HelicopterController : MonoBehaviour
     private void HelicopterSetUp()
     {
         rb2d = GetComponent<Rigidbody2D>();
-        boxCollider2D = GetComponent<BoxCollider2D>();
+        animator = GetComponent<Animator>();
     }
     private void PlayerMovement()
     {
         rb2d.velocity = new Vector3(horizontal * speed, vertical * speed);
+        if (horizontal > 0)
+        {
+            gameObject.transform.localScale = new Vector3(2,1,1);
+        }
+        else if (horizontal < 0)
+        {
+            gameObject.transform.localScale = new Vector3(-2, 1, 1);
+        }
     }
     public bool IsHelicopterFull()
     {
@@ -63,11 +70,16 @@ public class HelicopterController : MonoBehaviour
     public void IncrementSoldierCarryCount()
     {
         soldiersCarrying += 1;
+        if (IsHelicopterFull())
+        {
+            animator.SetBool("isFull", true);
+        }
     }
     private int DropSoldiers()
     {
         int currentSoldiers = soldiersCarrying;
         soldiersCarrying = 0;
+        animator.SetBool("isFull", false);
         return currentSoldiers;
     }
 }
