@@ -14,6 +14,12 @@ public class HelicopterController : MonoBehaviour
 
     private Rigidbody2D rb2d;
     private Animator animator;
+    [SerializeField] Transform spawnPoint;
+
+    public int SolderiersCarrying
+    {
+        get => soldiersCarrying;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -37,9 +43,13 @@ public class HelicopterController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Tree"))
         {
-            isPlayerAlive = false;
-            rb2d.velocity = Vector3.zero;
-            Debug.Log("Lose");
+            if (isPlayerAlive)
+            {
+                isPlayerAlive = false;
+                rb2d.velocity = Vector3.zero;
+                GameObject.Find("Main Camera").GetComponent<GameManager>().LoseState();
+                Debug.Log("Lose");
+            }
         }
         else if (collision.gameObject.CompareTag("Hospital"))
         {
@@ -51,16 +61,22 @@ public class HelicopterController : MonoBehaviour
         rb2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
     }
+    public void ResetHelicopter()
+    {
+        rb2d.velocity = Vector3.zero;
+        gameObject.transform.position = spawnPoint.position;
+        isPlayerAlive = true;
+    }
     private void PlayerMovement()
     {
         rb2d.velocity = new Vector3(horizontal * speed, vertical * speed);
         if (horizontal > 0)
         {
-            gameObject.transform.localScale = new Vector3(2,1,1);
+            gameObject.transform.localScale = new Vector3(1,1,1);
         }
         else if (horizontal < 0)
         {
-            gameObject.transform.localScale = new Vector3(-2, 1, 1);
+            gameObject.transform.localScale = new Vector3(-1,1,1);
         }
     }
     public bool IsHelicopterFull()

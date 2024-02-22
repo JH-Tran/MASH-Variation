@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class Hospital : MonoBehaviour
 {
-    private int totalPoints = 0;
-
+    private GameManager gameManager;
+    public void Start()
+    {
+        gameManager = GameObject.Find("Main Camera").GetComponent<GameManager>();
+    }
     public void RescuedSoldiers(int soldiersCount)
     {
-        totalPoints += soldiersCount;
-        Debug.Log(totalPoints);
+        gameManager.TotalSoldiersRescued = soldiersCount;
     }
-
 }
