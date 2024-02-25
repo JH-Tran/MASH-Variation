@@ -14,12 +14,15 @@ public class GameManager : MonoBehaviour
     private string soldiersHelicopterString = "Soldiers In Helicopter: ";
     private List<Transform> soldiersTransform = new List<Transform>();
     private int maxSoldiers = 1;
+    //Gamestate
     private bool gameEnd = false;
+    private bool gamePause = false;
 
     [SerializeField] HelicopterController controller;
     [SerializeField] TextMeshProUGUI totalRescuedText;
     [SerializeField] TextMeshProUGUI soldiersHelicopterText;
     [SerializeField] GameObject gameStateScreen;
+    [SerializeField] GameObject pauseMenuScreen;
     [SerializeField] TextMeshProUGUI winLoseText;
     [SerializeField] AudioClip winSound;
     [SerializeField] AudioClip loseSound;
@@ -40,6 +43,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         gameStateScreen.SetActive(false);
+        pauseMenuScreen.SetActive(false);
     }
     private void Start()
     {
@@ -53,6 +57,10 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PauseGame();
+        }
         if (Input.GetKeyDown(KeyCode.R))
         {
             ResetGame();
@@ -69,6 +77,21 @@ public class GameManager : MonoBehaviour
             WinState();
         }
     }
+    private void PauseGame()
+    {
+        if (!gamePause)
+        {
+            pauseMenuScreen.SetActive(true);
+            Time.timeScale = 0; 
+            gamePause = true;
+        }
+        else if (gamePause)
+        {
+            pauseMenuScreen.SetActive(false);
+            Time.timeScale = 1f;
+            gamePause = false;
+        }
+    }
     private void ResetGame()
     {
         ResartSoldiers();
@@ -76,7 +99,10 @@ public class GameManager : MonoBehaviour
         totalSoldiersRescued = 0;
         GameObject.FindWithTag("Player").GetComponent<HelicopterController>().ResetHelicopter();
         gameStateScreen.SetActive(false);
+        pauseMenuScreen.SetActive(false);
         gameEnd = false;
+        Time.timeScale = 1f;
+        gamePause = false;
     }
     private void SpawnSoldiers()
     {

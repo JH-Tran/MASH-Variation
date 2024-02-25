@@ -69,6 +69,7 @@ public class HelicopterController : MonoBehaviour
         gameObject.transform.position = spawnPoint.position;
         isPlayerAlive = true;
         soldiersCarrying = 0;
+        animator.SetBool("isFull", false);
     }
     private void PlayerMovement()
     {
