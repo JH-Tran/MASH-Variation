@@ -35,6 +35,8 @@ public class BulletBehaviour : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Tree"))
         {
+            Destroy(collision.gameObject);
+            GameObject.FindWithTag("MainCamera").GetComponent<GameManager>().SpawnTree();
             DestroyBullet();
         }
         else if (collision.gameObject.CompareTag("Environment"))

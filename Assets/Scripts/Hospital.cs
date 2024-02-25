@@ -9,7 +9,7 @@ public class Hospital : MonoBehaviour
     public void Start()
     {
         gameManager = GameObject.Find("Main Camera").GetComponent<GameManager>();
-        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource = gameObject.GetComponent<AudioSource>();
     }
     public void RescuedSoldiers(int soldiersCount)
     {
