@@ -7,12 +7,11 @@ public class BulletBehaviour : MonoBehaviour
     private GameObject player;
     private Rigidbody2D rb;
     private TankBehaviour tank;
-    private float bulletSpeed = 5;
+    private float bulletSpeed = 3f;
 
     // Start is called before the first frame update
     void Start()
     {
-        Physics.IgnoreLayerCollision(6, 7);
         rb = GetComponent<Rigidbody2D>();
         player = GameObject.FindGameObjectWithTag("Player");
 
@@ -22,6 +21,12 @@ public class BulletBehaviour : MonoBehaviour
         float rotation = Mathf.Atan2(-direction.y, -direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, rotation);
     }
+
+    public void Update()
+    {
+        Physics.IgnoreLayerCollision(7, 6);
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))

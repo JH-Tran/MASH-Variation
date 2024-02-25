@@ -98,6 +98,12 @@ public class GameManager : MonoBehaviour
         SpawnSoldiers();
         totalSoldiersRescued = 0;
         GameObject.FindWithTag("Player").GetComponent<HelicopterController>().ResetHelicopter();
+        GameObject bullet = GameObject.FindGameObjectWithTag("Bullet");
+        if (bullet != null)
+        {
+            Destroy(bullet);
+        }
+        GameObject.FindWithTag("Tank").GetComponent<TankBehaviour>().RestartTank();
         gameStateScreen.SetActive(false);
         pauseMenuScreen.SetActive(false);
         gameEnd = false;
