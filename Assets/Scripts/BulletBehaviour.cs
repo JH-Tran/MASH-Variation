@@ -7,7 +7,7 @@ public class BulletBehaviour : MonoBehaviour
     private GameObject player;
     private Rigidbody2D rb;
     private TankBehaviour tank;
-    private float bulletSpeed = 3f;
+    private float bulletSpeed = 3.1f;
 
     // Start is called before the first frame update
     void Start()

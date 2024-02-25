@@ -12,7 +12,6 @@ public class TankBehaviour : MonoBehaviour
     [SerializeField] GameObject bulletStartingPoint;
     [SerializeField] GameObject bulletPrefab;
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +38,5 @@ public class TankBehaviour : MonoBehaviour
             GameObject bulletObj = Instantiate(bulletPrefab, bulletStartingPoint.transform.position, Quaternion.identity);
             bulletObj.GetComponent<BulletBehaviour>().SetTank(this);
         }
-
     }
 }
