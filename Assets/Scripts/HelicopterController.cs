@@ -42,7 +42,7 @@ public class HelicopterController : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Tree"))
+        if (collision.gameObject.CompareTag("Tree") || collision.gameObject.CompareTag("Bullet"))
         {
             if (isPlayerAlive)
             {
@@ -69,6 +69,7 @@ public class HelicopterController : MonoBehaviour
         gameObject.transform.position = spawnPoint.position;
         isPlayerAlive = true;
         soldiersCarrying = 0;
+        animator.SetBool("isFull", false);
     }
     private void PlayerMovement()
     {

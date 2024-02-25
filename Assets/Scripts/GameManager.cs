@@ -13,21 +13,31 @@ public class GameManager : MonoBehaviour
     private string totalSoldiersString = "Soldiers Rescued: ";
     private string soldiersHelicopterString = "Soldiers In Helicopter: ";
     private List<Transform> soldiersTransform = new List<Transform>();
+    private List<Transform> treeTransform = new List<Transform>();
     private int maxSoldiers = 1;
+    //Gamestate
     private bool gameEnd = false;
+    private bool gamePause = false;
 
     [SerializeField] HelicopterController controller;
     [SerializeField] TextMeshProUGUI totalRescuedText;
     [SerializeField] TextMeshProUGUI soldiersHelicopterText;
     [SerializeField] GameObject gameStateScreen;
+    [SerializeField] GameObject pauseMenuScreen;
     [SerializeField] TextMeshProUGUI winLoseText;
     [SerializeField] AudioClip winSound;
     [SerializeField] AudioClip loseSound;
     [SerializeField] AudioSource audioSource;
 
     [SerializeField] GameObject soldiersPrefab;
-    [SerializeField] Transform injuredSoldiers;
+    [SerializeField] Transform injuredSoldiersParent;
     [SerializeField] GameObject soldiers;
+
+    [SerializeField] GameObject treePrefab;
+    [SerializeField] Transform treesTranformParent;
+    [SerializeField] GameObject trees;
+    private int maxTrees = 3;
+
     
     public int TotalSoldiersRescued
     {
@@ -40,19 +50,29 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         gameStateScreen.SetActive(false);
+        pauseMenuScreen.SetActive(false);
     }
     private void Start()
     {
-        foreach (Transform t in injuredSoldiers)
+        foreach (Transform t in injuredSoldiersParent)
         {
             soldiersTransform.Add(t);
         }
+        foreach (Transform t in treesTranformParent)
+        {
+            treeTransform.Add(t);
+        }
         maxSoldiers = soldiersTransform.Count;
         SpawnSoldiers();
+        SpawnTrees();
         audioSource = GetComponent<AudioSource>();
     }
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PauseGame();
+        }
         if (Input.GetKeyDown(KeyCode.R))
         {
             ResetGame();
@@ -69,14 +89,40 @@ public class GameManager : MonoBehaviour
             WinState();
         }
     }
+    private void PauseGame()
+    {
+        if (!gamePause)
+        {
+            pauseMenuScreen.SetActive(true);
+            Time.timeScale = 0; 
+            gamePause = true;
+        }
+        else if (gamePause)
+        {
+            pauseMenuScreen.SetActive(false);
+            Time.timeScale = 1f;
+            gamePause = false;
+        }
+    }
     private void ResetGame()
     {
-        ResartSoldiers();
+        RestartSoldiers();
+        RestartTrees();
         SpawnSoldiers();
+        SpawnTrees();
         totalSoldiersRescued = 0;
         GameObject.FindWithTag("Player").GetComponent<HelicopterController>().ResetHelicopter();
+        GameObject bullet = GameObject.FindGameObjectWithTag("Bullet");
+        if (bullet != null)
+        {
+            Destroy(bullet);
+        }
+        GameObject.FindWithTag("Tank").GetComponent<TankBehaviour>().RestartTank();
         gameStateScreen.SetActive(false);
+        pauseMenuScreen.SetActive(false);
         gameEnd = false;
+        Time.timeScale = 1f;
+        gamePause = false;
     }
     private void SpawnSoldiers()
     {
@@ -86,11 +132,75 @@ public class GameManager : MonoBehaviour
             soldier.transform.SetParent(soldiers.transform);
         }
     }
-    private void ResartSoldiers()
+    private void SpawnTrees()
+    {
+        for (int i = 0; i < maxTrees; i++)
+        {
+            int number;
+            GameObject tree;
+            bool pass = false;
+
+            while (!pass)
+            {
+                number = Random.Range(0, 9);
+                Transform tempTree = treeTransform[number];
+                bool uniqueTransform = true;
+                foreach (Transform t in trees.transform)
+                {
+                    if (tempTree.position == t.position)
+                    {
+                        uniqueTransform = false;
+                        break;
+                    }
+                }
+                if (uniqueTransform)
+                {
+                    tree = Instantiate(treePrefab, treeTransform[number].transform.position, Quaternion.identity);
+                    tree.transform.SetParent(trees.transform);
+                    pass = true;
+                }
+            }
+        }
+    }
+    public void SpawnTree()
+    {
+        int number;
+        GameObject tree;
+        bool pass = false;
+
+        while (!pass)
+        {
+            number = Random.Range(0, treeTransform.Count-1);
+            Transform tempTree = treeTransform[number];
+            bool uniqueTransform = true;
+            foreach (Transform t in trees.transform)
+            {
+                if (tempTree.position == t.position)
+                {
+                    uniqueTransform = false;
+                    break;
+                }
+            }
+            if (uniqueTransform)
+            {
+                tree = Instantiate(treePrefab, treeTransform[number].transform.position, Quaternion.identity);
+                tree.transform.SetParent(trees.transform);
+                pass = true;
+            }
+        }
+    }
+    private void RestartSoldiers()
     {
         foreach (Transform soldier in soldiers.transform)
         {
             Destroy(soldier.gameObject);
+        }
+    }
+    private void RestartTrees()
+    {
+        foreach (Transform tree in trees.transform)
+        {
+            Destroy(tree.gameObject);
         }
     }
     private void WinState()
