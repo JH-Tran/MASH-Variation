@@ -42,7 +42,7 @@ public class HelicopterController : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Tree"))
+        if (collision.gameObject.CompareTag("Tree") || collision.gameObject.CompareTag("Bullet"))
         {
             if (isPlayerAlive)
             {
