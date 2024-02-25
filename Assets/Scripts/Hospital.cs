@@ -14,6 +14,9 @@ public class Hospital : MonoBehaviour
     public void RescuedSoldiers(int soldiersCount)
     {
         gameManager.TotalSoldiersRescued = soldiersCount;
-        audioSource.Play();
+        if (soldiersCount > 0)
+        {
+            audioSource.Play();
+        }
     }
 }

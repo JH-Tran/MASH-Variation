@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !gameEnd)
         {
             PauseGame();
         }
@@ -106,17 +106,17 @@ public class GameManager : MonoBehaviour
     }
     private void ResetGame()
     {
+        GameObject bullet = GameObject.FindGameObjectWithTag("Bullet");
+        if (bullet != null)
+        {
+            Destroy(bullet);
+        }
         RestartSoldiers();
         RestartTrees();
         SpawnSoldiers();
         SpawnTrees();
         totalSoldiersRescued = 0;
         GameObject.FindWithTag("Player").GetComponent<HelicopterController>().ResetHelicopter();
-        GameObject bullet = GameObject.FindGameObjectWithTag("Bullet");
-        if (bullet != null)
-        {
-            Destroy(bullet);
-        }
         GameObject.FindWithTag("Tank").GetComponent<TankBehaviour>().RestartTank();
         gameStateScreen.SetActive(false);
         pauseMenuScreen.SetActive(false);
@@ -206,15 +206,19 @@ public class GameManager : MonoBehaviour
     private void WinState()
     {
         gameStateScreen.SetActive(true);
+        gameEnd = true;
         winLoseText.text = "You Rescued Everyone!";
         audioSource.clip = winSound;
         audioSource.Play();
+        Time.timeScale = 0f;
     }
     public void LoseState()
     {
         gameStateScreen.SetActive(true);
+        gameEnd = true;
         winLoseText.text = "Game over!";
         audioSource.clip = loseSound;
         audioSource.Play();
+        Time.timeScale = 0f;
     }
 }
